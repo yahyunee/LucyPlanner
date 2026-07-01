@@ -111,7 +111,8 @@ Delete**)으로 정리됩니다.
 
 ## 소스에서 빌드하기
 
-직접 빌드하거나 앱을 수정해 보고 싶다면:
+직접 빌드하거나 앱을 수정해 보고 싶다면 무료 Apple ID만 있으면 충분합니다.
+유료 Apple Developer Program 가입은 로컬 빌드에는 필요 없습니다.
 
 ```bash
 git clone https://github.com/yahyunee/LucyPlanner.git
@@ -122,9 +123,16 @@ open LucyPlanner.xcodeproj
 Xcode에서:
 
 1. **LucyPlanner** scheme + **My Mac** 실행 대상 선택.
-2. **Signing & Capabilities**에서 서명 팀을 본인 것으로 변경
-   (혹은 "Sign to Run Locally" 그대로 두어 로컬 전용 빌드).
-3. `⌘R`로 빌드 및 실행.
+2. **LucyPlanner** 타깃 → **Signing & Capabilities** 탭.
+3. **Team**을 본인의 Personal Team으로 변경. 목록이 비어 있다면
+   **Add an Account…**로 아무 Apple ID나 로그인하면 무료 개인 팀이
+   자동 생성됩니다.
+4. 만약 Xcode가 bundle identifier 충돌을 알리면, **Bundle Identifier**를
+   `com.lucy.LucyPlanner` → `com.<본인이름>.LucyPlanner` 같은 고유한 값으로
+   바꿔 주세요.
+5. `⌘R`로 빌드 및 실행.
+6. 첫 실행 시 macOS가 캘린더 접근 권한을 물어봅니다. 기존 이벤트를 시간표에
+   보고 싶다면 **허용**을 선택하세요.
 
 ---
 
@@ -154,6 +162,59 @@ Xcode에서:
 2. 내일의 목표를 씁니다.
 3. Inbox의 todo에서 ⋯ → **Plan for this day**로 내일에 배정.
 4. 시간이 정해진 일은 내일의 시간표에 드래그해 둡니다.
+
+---
+
+## 문제 해결 (Troubleshooting)
+
+### 앱에서 캘린더 일정이 안 보여요
+
+LucyPlanner는 Apple의 EventKit을 통해 이벤트를 읽기 때문에, **macOS 기본
+캘린더(Apple Calendar) 앱에서 보이는 것만** 볼 수 있습니다. 순서대로
+체크해 보세요:
+
+1. **Apple Calendar 앱에서는 그 일정이 보이나요?**
+   같은 날짜로 Apple Calendar 앱을 열어 확인하세요. 거기서 안 보이면
+   LucyPlanner도 볼 수 없습니다. Google/Outlook 등을 쓰신다면 먼저
+   **Apple Calendar → 설정 → 계정**에서 해당 계정을 추가해 Apple Calendar가
+   동기화하도록 만들어야 합니다.
+
+2. **LucyPlanner에 캘린더 권한이 켜져 있나요?**
+   **시스템 설정 → 개인 정보 보호 및 보안 → 캘린더**에서 **LucyPlanner**가
+   켜져 있는지 확인. 만약 목록에 아예 없다면 앱을 완전히 종료 후 다시
+   실행해 주세요. 첫 실행이 권한 요청 지점까지 도달해야 macOS가 앱을
+   등록합니다.
+
+3. **LucyPlanner 안에서 그 캘린더를 숨긴 상태는 아닌가요?**
+   상단바 **⚙︎** → **Calendars…** 시트에서 해당 캘린더가 체크되어 있는지
+   확인. 여기서 끈 캘린더는 재실행해도 계속 숨겨진 상태로 유지됩니다.
+
+4. **일정이 시간표 밖 시간대인가요?**
+   시간표는 **오전 6시 ~ 다음 날 오전 2시**만 표시합니다. 이 범위 바깥의
+   이벤트나 종일 이벤트는 블록으로 뜨지 않습니다.
+
+5. **올바른 날짜를 보고 있나요?**
+   창 상단의 날짜 선택기가 기준입니다. 다른 날로 스크롤됐다면 **Today**
+   버튼으로 오늘로 돌아오세요.
+
+6. **방금 동기화된 일정을 강제로 새로 고치고 싶다면**
+   **⚙︎ → Calendars…** 시트에서 아무 캘린더나 껐다 켜 보거나, 날짜를
+   다른 날로 옮겼다가 돌아오면 다시 로드됩니다. 그래도 안 되면 앱을
+   완전히 종료 후 재실행 — 전체 EventKit 상태를 새로 조회합니다.
+
+### "LucyPlanner를 열 수 없습니다. Apple에서 악성 소프트웨어가 있는지 확인할 수 없기 때문입니다"
+
+공증(notarization)을 거치지 않은 빌드에서 뜨는 표준 Gatekeeper 경고입니다.
+`LucyPlanner.app`을 **우클릭 → 열기** → 대화상자에서 다시 **열기**를
+선택하거나, 터미널에서 다음 한 줄을 실행하세요:
+```bash
+xattr -dr com.apple.quarantine /Applications/LucyPlanner.app
+```
+
+### 실수로 캘린더 권한을 거부했어요
+
+macOS는 자동으로 다시 묻지 않습니다. **시스템 설정 → 개인 정보 보호 및
+보안 → 캘린더 → LucyPlanner** 토글을 켜고, 앱을 재실행하세요.
 
 ---
 

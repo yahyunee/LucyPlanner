@@ -113,7 +113,9 @@ is uploaded anywhere. CloudKit sync is planned for a future iPhone version.
 
 ## Build from source
 
-Prefer to build yourself, or want to modify the app?
+Prefer to build yourself, or want to modify the app? A free Apple ID is
+enough — you don't need a paid Apple Developer Program membership for a
+local build.
 
 ```bash
 git clone https://github.com/yahyunee/LucyPlanner.git
@@ -123,10 +125,17 @@ open LucyPlanner.xcodeproj
 
 Then in Xcode:
 
-1. Select the **LucyPlanner** scheme, **My Mac** as the run destination.
-2. Under **Signing & Capabilities**, change the signing team to your own
-   (or leave it "Sign to Run Locally" for a local-only build).
-3. `⌘R` to build and run.
+1. Select the **LucyPlanner** scheme with **My Mac** as the run destination.
+2. Open the **LucyPlanner** target → **Signing & Capabilities** tab.
+3. Change **Team** to your own Personal Team. If none is listed, click
+   **Add an Account…** and sign in with any Apple ID; Xcode will create
+   a free personal team automatically.
+4. If Xcode complains that the bundle identifier is unavailable, change
+   **Bundle Identifier** from `com.lucy.LucyPlanner` to something unique
+   like `com.<yourname>.LucyPlanner`.
+5. `⌘R` to build and run.
+6. On first launch, macOS asks for Calendar access. Say **Allow** if you
+   want your existing events to show up in the time table.
 
 ---
 
@@ -157,6 +166,59 @@ Then in Xcode:
 2. Set tomorrow's goal.
 3. Use the ellipsis menu on any Inbox todo → **Plan for this day**.
 4. Drag anything time-sensitive onto tomorrow's time table.
+
+---
+
+## Troubleshooting
+
+### The time table doesn't show my calendar events
+
+LucyPlanner reads events through Apple's EventKit, which means it can only
+see what the built-in **Apple Calendar** app can see. Walk through this
+checklist in order:
+
+1. **Does the event show up in Apple Calendar itself?**
+   Open the Apple Calendar app for the same date. If the event isn't there,
+   LucyPlanner can't show it either. For Google/Outlook/other calendars,
+   you first need to add the account in **Apple Calendar → Settings →
+   Accounts** so Apple Calendar syncs them.
+
+2. **Did you grant Calendar permission?**
+   Open **System Settings → Privacy & Security → Calendars** and make sure
+   **LucyPlanner** is turned on. If LucyPlanner isn't in the list at all,
+   quit the app and relaunch — the first launch has to actually reach the
+   permission prompt for macOS to register the app.
+
+3. **Is the calendar filtered out inside LucyPlanner?**
+   Click the **⚙︎** gear in the top bar → **Calendars…** and check that the
+   calendar you're looking for is enabled. LucyPlanner remembers which
+   calendars you've hidden across launches.
+
+4. **Is the event outside the visible time window?**
+   The time table covers **6:00 AM to 2:00 AM the next day**. All-day
+   events and events outside that range don't render as blocks.
+
+5. **Are you looking at the right day?**
+   The date picker at the top of the window is the source of truth. Click
+   **Today** to snap back if you scrolled off.
+
+6. **Just synced a new event? Nudge a refresh.**
+   Open the **⚙︎ → Calendars…** sheet, toggle any calendar off and back on,
+   or click a different date and back. Both trigger a re-fetch. If nothing
+   works, quit and relaunch — a full restart re-queries EventKit from
+   scratch.
+
+### macOS says "LucyPlanner can't be opened because Apple cannot check it for malicious software"
+
+That's the standard Gatekeeper warning for a build that hasn't been
+notarized. Right-click the app → **Open** → click **Open** in the dialog,
+or run `xattr -dr com.apple.quarantine /Applications/LucyPlanner.app` once
+in Terminal.
+
+### I denied Calendar access by mistake
+
+macOS won't re-prompt automatically. Fix it in **System Settings → Privacy
+& Security → Calendars → LucyPlanner** (toggle on), then restart the app.
 
 ---
 
