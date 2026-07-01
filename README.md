@@ -200,4 +200,9 @@ changes — it saves both of us time.
 
 ## License
 
-[MIT](LICENSE) © yahyunee
+[GPL-3.0](LICENSE) © 2026 yahyunee
+
+This is copyleft: you're free to use, study, modify, and redistribute the
+code, but any distributed derivative must also be released under GPL-3.0
+with source available. If you want to reuse the code under different terms,
+open an issue.
