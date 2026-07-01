@@ -84,14 +84,36 @@ is uploaded anywhere. CloudKit sync is planned for a future iPhone version.
 
 ## Requirements
 
-- macOS 14 Sonoma or later (SwiftData baseline)
-- Xcode 15 or later
-- Swift 5.9+
+- macOS 15 Sequoia or later
 - Apple Calendar access permission (prompted on first launch)
+- Xcode 16+ **only if building from source**
 
 ---
 
-## Getting started
+## Install (recommended)
+
+1. Go to the [Releases page](https://github.com/yahyunee/LucyPlanner/releases).
+2. Download `LucyPlanner.zip` from the latest release.
+3. Double-click the zip to unpack. Drag `LucyPlanner.app` into `/Applications`.
+4. **First launch**: because the app isn't notarized through Apple yet,
+   Gatekeeper will refuse a plain double-click. Do one of the following:
+   - **Right-click** `LucyPlanner.app` → **Open** → click **Open** in the
+     dialog. macOS remembers your choice for future launches.
+   - Or, in Terminal:
+     ```bash
+     xattr -dr com.apple.quarantine /Applications/LucyPlanner.app
+     ```
+5. macOS will ask for **Calendar** access on first run. Grant it if you want
+   your existing calendar events to appear in the time table (the app still
+   works if you decline — the time table just stays event-free).
+
+> No releases yet? See [Build from source](#build-from-source) below.
+
+---
+
+## Build from source
+
+Prefer to build yourself, or want to modify the app?
 
 ```bash
 git clone https://github.com/yahyunee/LucyPlanner.git
@@ -102,12 +124,9 @@ open LucyPlanner.xcodeproj
 Then in Xcode:
 
 1. Select the **LucyPlanner** scheme, **My Mac** as the run destination.
-2. Change the signing team to your own under **Signing & Capabilities**.
+2. Under **Signing & Capabilities**, change the signing team to your own
+   (or leave it "Sign to Run Locally" for a local-only build).
 3. `⌘R` to build and run.
-
-On first launch, macOS will ask for Calendar access. Grant it if you want
-your calendar events to appear in the time table; otherwise the time table
-still works, it just won't show external events.
 
 ---
 

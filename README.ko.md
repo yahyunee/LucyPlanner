@@ -81,14 +81,37 @@ Delete**)으로 정리됩니다.
 
 ## 시스템 요구 사항
 
-- macOS 14 Sonoma 이상 (SwiftData 최소 사양)
-- Xcode 15 이상
-- Swift 5.9 이상
+- macOS 15 Sequoia 이상
 - 캘린더 접근 권한 (첫 실행 시 요청)
+- **소스에서 직접 빌드할 때만** Xcode 16 이상
 
 ---
 
-## 시작하기
+## 설치 (권장)
+
+1. [Releases 페이지](https://github.com/yahyunee/LucyPlanner/releases)로 이동.
+2. 최신 릴리스의 `LucyPlanner.zip`을 내려받습니다.
+3. zip을 더블클릭해 압축을 풀고, `LucyPlanner.app`을 `/Applications`
+   폴더로 드래그.
+4. **첫 실행**: 아직 Apple 공증(notarization)을 거치지 않았기 때문에
+   그냥 더블클릭하면 Gatekeeper가 실행을 막습니다. 아래 중 하나로 해결:
+   - `LucyPlanner.app`을 **우클릭 → 열기** → 대화상자에서 다시 **열기**
+     클릭. 한 번 허용하면 이후부터는 그냥 더블클릭으로 실행됩니다.
+   - 혹은 터미널에서:
+     ```bash
+     xattr -dr com.apple.quarantine /Applications/LucyPlanner.app
+     ```
+5. 첫 실행 시 macOS가 **캘린더** 권한을 물어봅니다. 시간표에 기존 캘린더
+   이벤트를 띄우고 싶다면 허용하세요 (거절해도 앱은 정상 동작하며,
+   시간표만 이벤트 없이 비어 보일 뿐입니다).
+
+> 아직 릴리스가 없다면 아래 [소스에서 빌드하기](#소스에서-빌드하기) 참조.
+
+---
+
+## 소스에서 빌드하기
+
+직접 빌드하거나 앱을 수정해 보고 싶다면:
 
 ```bash
 git clone https://github.com/yahyunee/LucyPlanner.git
@@ -99,12 +122,9 @@ open LucyPlanner.xcodeproj
 Xcode에서:
 
 1. **LucyPlanner** scheme + **My Mac** 실행 대상 선택.
-2. **Signing & Capabilities**에서 서명 팀을 본인 것으로 변경.
+2. **Signing & Capabilities**에서 서명 팀을 본인 것으로 변경
+   (혹은 "Sign to Run Locally" 그대로 두어 로컬 전용 빌드).
 3. `⌘R`로 빌드 및 실행.
-
-첫 실행 시 macOS가 캘린더 접근 권한을 물어봅니다. 시간표에 외부
-이벤트를 띄우고 싶다면 허용하세요. 거절해도 시간표 자체는 정상 동작하며,
-외부 이벤트만 안 보입니다.
 
 ---
 
